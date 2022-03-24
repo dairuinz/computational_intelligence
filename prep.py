@@ -11,7 +11,7 @@ def bow():
     df.columns = ['sentence']
     df['sentence'] = df['sentence'].str.replace('<.*?>', '', regex=True)        #deletes <int>
     # print(df.head())
-    df = df[0:1000]
+    df = df[0:100]
     # print(df)
 
     dict = {}                                       #creates dictionary from vocabs file
@@ -22,13 +22,17 @@ def bow():
 
     # print(dict.values())
 
-    X = []
+    X = []                                          #creates bag of words array
     for y in df.sentence:
+        x_counter = [0] * 8519
         for w in y.split():
-            x_counter = [0] * 8519
             for i in range(8520):
                 if int(w) == i:
                     x_counter[i] = x_counter[i] + 1
         X.append(x_counter)
-    print(X)
-    print(len(X), 'x', len(X[0]), sep='')
+    # print(X)
+    # print(len(X), 'x', len(X[0]), sep='')
+
+    return X
+
+
