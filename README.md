@@ -4,4 +4,4 @@
 
 + Preprocessing and preparation of data
   + Bag of Words Implementation 
-    + asd
+  + Centering/Normalization/Standardization
