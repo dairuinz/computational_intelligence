@@ -4,4 +4,4 @@
 
 + Preprocessing and preparation of data
   + Bag of Words Implementation 
-  + Centering/Normalization/Standardization of variables
+  + Variables Centering/Normalization/Standardization
