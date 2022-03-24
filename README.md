@@ -4,3 +4,4 @@
 
 + Preprocessing and preparation of data
   + Bag of Words Implementation 
+    + asd
