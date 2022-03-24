@@ -1,6 +1,6 @@
 # Computational Intelligence
 
-#Tasks
+# Tasks
 
 + Preprocessing and preparation of data
   + Bag of Words Implementation 
