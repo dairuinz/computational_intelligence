@@ -7,7 +7,7 @@ def bow():
     vocab_df.columns = ['word', 'id']
     # print(vocab_df.head())
 
-    df = pd.read_csv('Data/test-data.dat', sep=',', header=None)
+    df = pd.read_csv('Data/train-data.dat', sep=',', header=None)
     df.columns = ['sentence']
     df['sentence'] = df['sentence'].str.replace('<.*?>', '', regex=True)        #deletes <int>
     # print(df.head())
