@@ -4,12 +4,12 @@ import pandas as pd
 
 def main():
     X = prep.bow()
-    # print(X)
+    print('X shape: ', X.shape, sep='')
 
-    y = pd.read_csv('Data/train-label.dat', sep=',', header=None)
-    y.columns = ['label']
-    y = y[0:100]
-    # print(y)
+    y = prep.out()
+    print('y shape: ', y.shape, sep='')
+    # print(y.dtypes)
+
     predi.pred(X, y)
 
 if __name__ == '__main__':

@@ -33,6 +33,14 @@ def bow():
     # print(X)
     # print(len(X), 'x', len(X[0]), sep='')
 
+    X = pd.DataFrame(X)
     return X
 
+def out():
+    y = pd.read_csv('Data/train-label.dat', sep=',', header=None)
+    y.columns = ['label']
+    y = y[0:100]
+    y = y['label'].str.split(' ', expand=True)
+    y = y.astype(int)
 
+    return y
