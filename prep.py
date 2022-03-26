@@ -34,6 +34,7 @@ def bow():
     # print(len(X), 'x', len(X[0]), sep='')
 
     X = pd.DataFrame(X)
+
     return X
 
 def out():
