@@ -69,5 +69,5 @@ def pred(X, y):
 
         scores = model.evaluate(X_test, y_test, verbose=0)
         rmseList.append(scores[0])
-        print("Fold :", i, " RMSE:", scores[0])
+        print("Fold :", i+1, " RMSE:", scores[0])
 
