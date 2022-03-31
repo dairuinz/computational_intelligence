@@ -8,3 +8,8 @@
 
 + Neural Network Prediction
   + Cross-Validation
+  + Hidden Layer Optimization
+  + Loss Functins Optimization
+  + Activation Function Optimization
+  + Neurons Optimization
+  
