@@ -32,7 +32,6 @@ def bow():
         X.append(x_counter)
     # print(X)
     # print(len(X), 'x', len(X[0]), sep='')
-
     X = pd.DataFrame(X)
 
     return X
@@ -43,5 +42,5 @@ def out():
     y = y[0:100]
     y = y['label'].str.split(' ', expand=True)
     y = y.astype(int)
-
+    # y = y.transpose()
     return y
