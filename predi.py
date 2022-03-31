@@ -8,7 +8,8 @@ from sklearn.preprocessing import MinMaxScaler, StandardScaler
 import numpy as np
 from tensorflow import keras
 from keras.optimizers import *
-from sklearn.neighbors import KNeighborsClassifier
+from keras.callbacks import EarlyStopping
+from keras.callbacks import ModelCheckpoint
 
 import os
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
@@ -63,11 +64,26 @@ def pred(X, y):
             metrics=['accuracy']
         )
 
-        model.fit(X_train, y_train, epochs=50)
+        es = EarlyStopping(             #early stopping
+            monitor='val_loss',
+            patience=30,
+            verbose=1,
+            mode='min'
+        )
+
+        mc = ModelCheckpoint(
+            'best_m.h5',
+            monitor='val_accuracy',
+            mode='max',
+            verbose=1,
+            save_best_only=True
+        )
+
+        model.fit(X_train, y_train, validation_data=(X_test, y_test), epochs=50, callbacks=[es, mc], verbose=2)
 
         print('val_loss, val_acc: ', model.evaluate(X_test, y_test), sep='')
 
         scores = model.evaluate(X_test, y_test, verbose=0)
         rmseList.append(scores[0])
-        print("Fold :", i+1, " RMSE:", scores[0])
+        print("Fold :", i+1, " loss", scores[0])
 
