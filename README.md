@@ -7,7 +7,7 @@
   + Variables Centering/Normalization/Standardization
 
 + Neural Network Prediction
-  + Cross-Validation
+  + Cross-Validation 
   + Hidden Layer Optimization
   + Loss Functins Optimization
   + Activation Function Optimization
