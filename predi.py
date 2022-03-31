@@ -1,6 +1,7 @@
 import keras
 from keras.models import Sequential
 from keras.layers import Dense
+from keras import regularizers
 from keras import backend as K
 import tensorflow as tf
 from sklearn.model_selection import KFold, train_test_split
@@ -52,7 +53,7 @@ def pred(X, y):
         model.add(tf.keras.layers.Flatten())
         model.add(Dense(hl_n, activation='relu'))
         # model.add(Dense(hl_n, activation='relu'))
-        model.add(Dense(20, input_shape=(8519,), activation='softmax'))
+        model.add(Dense(20, input_shape=(8519,), activation='softmax', kernel_regularizer=regularizers.l2(0.1)))
 
         opt = keras.optimizers.Adam(learning_rate=0.001)
 
@@ -79,7 +80,11 @@ def pred(X, y):
             save_best_only=True
         )
 
-        model.fit(X_train, y_train, validation_data=(X_test, y_test), epochs=50, callbacks=[es, mc], verbose=2)
+        model.fit(X_train, y_train,
+                  validation_data=(X_test, y_test),
+                  epochs=50,
+                  callbacks=[es, mc],
+                  verbose=2)
 
         print('val_loss, val_acc: ', model.evaluate(X_test, y_test), sep='')
 
