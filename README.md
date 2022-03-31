@@ -13,4 +13,5 @@
   + Activation Function Optimization
   + Neurons Optimization
   + Early Stopping
+  + L2 Regularization
   
