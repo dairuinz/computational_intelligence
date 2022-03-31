@@ -12,4 +12,5 @@
   + Loss Functins Optimization
   + Activation Function Optimization
   + Neurons Optimization
+  + Early Stopping
   
