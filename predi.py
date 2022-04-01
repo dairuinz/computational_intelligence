@@ -48,19 +48,19 @@ def pred(X, y):
     elif answer == '3':
         hl_n = 8519
 
+    opt = keras.optimizers.Adam(learning_rate=0.001)
+
     for i, (train, test) in enumerate(kfold.split(X)):
         model = Sequential()
-        model.add(tf.keras.layers.Flatten())
+        # model.add(tf.keras.layers.Flatten())
         model.add(Dense(hl_n, activation='relu'))
         # model.add(Dense(hl_n, activation='relu'))
         model.add(Dense(20, input_shape=(8519,), activation='softmax', kernel_regularizer=regularizers.l2(0.1)))
 
-        opt = keras.optimizers.Adam(learning_rate=0.001)
-
         model.compile(
             optimizer=opt,
-            # loss='binary_crossentropy',
-            loss='mean_squared_error',
+            loss='categorical_crossentropy',
+            # loss='mean_squared_error',
             # metrics=[rmse]
             metrics=['accuracy']
         )
