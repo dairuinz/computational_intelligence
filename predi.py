@@ -53,10 +53,11 @@ def pred(X, y):
 
     for i, (train, test) in enumerate(kfold.split(X)):
         model = Sequential()
-        # model.add(Dense(hl_n, activation='relu'))
         # model.add(Dense(20, input_shape=(8519,), activation='softmax', kernel_regularizer=regularizers.l2(0.1)))
+        # model.add(tf.keras.layers.Embedding(8519, 64, input_length=10))       #input Embedding layer
         model.add(Dense(8519, input_shape=(8519,), activation='relu'))          #input
-        model.add(Dense(10, activation='relu'))                         #hidden
+        model.add(Dense(hl_n, activation='relu'))                       #hidden
+        # model.add(Dense(10, activation='relu'))                         #hidden
         model.add(Dense(20, activation='sigmoid'))                          #output
 
         model.compile(

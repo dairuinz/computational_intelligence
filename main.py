@@ -7,7 +7,14 @@ pd.set_option('display.max_columns', None)
 
 
 def main():
-    X = prep.bow()
+    df = pd.read_csv('Data/train-data.dat', sep=',', header=None)
+    df.columns = ['sentence']
+    df['sentence'] = df['sentence'].str.replace('<.*?>', '', regex=True)  # deletes <int>
+    # print(df.head())
+    df = df[0:100]
+    X = df
+
+    X = prep.bow(X)
     print('X shape: ', X.shape, sep='')
     # print(X.head(5))
 
