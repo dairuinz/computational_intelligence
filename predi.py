@@ -48,7 +48,8 @@ def pred(X, y):
     elif answer == '3':
         hl_n = 8519
 
-    opt = keras.optimizers.Adam(learning_rate=0.01)
+    # opt = keras.optimizers.Adam(learning_rate=0.01)                   #adam
+    opt = keras.optimizers.SGD(learning_rate=0.001, momentum=0.2)       #sgd
 
     for i, (train, test) in enumerate(kfold.split(X)):
         model = Sequential()
@@ -60,8 +61,8 @@ def pred(X, y):
 
         model.compile(
             optimizer=opt,
-            loss='binary_crossentropy',
-            # loss='mean_squared_error',
+            # loss='binary_crossentropy',
+            loss='mean_squared_error',
             # metrics=[rmse]
             metrics=['accuracy']
         )

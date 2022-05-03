@@ -30,8 +30,6 @@ def bow():
                 if int(w) == i:
                     x_counter[i] = x_counter[i] + 1
         X.append(x_counter)
-    # print(X)
-    # print(len(X), 'x', len(X[0]), sep='')
     X = pd.DataFrame(X)
 
     return X
