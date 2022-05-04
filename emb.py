@@ -64,13 +64,13 @@ elif answer == '2':
 elif answer == '3':
     hl_n = 20
 
-# opt = keras.optimizers.Adam(learning_rate=0.01)                   #adam
-opt = keras.optimizers.SGD(learning_rate=0.001, momentum=0.2)       #sgd
+opt = keras.optimizers.Adam(learning_rate=0.01)                   #adam
+# opt = keras.optimizers.SGD(learning_rate=0.001, momentum=0.2)       #sgd
 
 for i, (train, test) in enumerate(kfold.split(X)):
     model = Sequential()
     # model.add(Dense(20, input_shape=(20,), activation='softmax', kernel_regularizer=regularizers.l2(0.1)))
-    # model.add(tf.keras.layers.Embedding(8519, 64, input_length=10))       #input Embedding layer
+    # model.add(tf.keras.layers.Embedding(20, 64, input_length=30))       #input Embedding layer
     model.add(Dense(20, input_shape=(20,), activation='relu'))          #input
     model.add(Dense(hl_n, activation='relu'))                       #hidden
     # model.add(Dense(10, activation='relu'))                         #hidden
@@ -103,7 +103,7 @@ for i, (train, test) in enumerate(kfold.split(X)):
               validation_data=(X_test, y_test),
               epochs=50,
               callbacks=[es, mc],
-              verbose=2)
+              verbose=0)
     
     print('val_loss, val_acc: ', model.evaluate(X_test, y_test), sep='')
     
