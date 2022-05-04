@@ -31,3 +31,6 @@ for line in df.sentence:
     com.append(sen)
 
 print(com)
+
+encoded_docs = [one_hot(d, 50) for d in com]
+X = pad_sequences(encoded_docs, maxlen=10, padding='post')
