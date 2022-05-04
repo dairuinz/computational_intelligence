@@ -1,11 +1,6 @@
 from keras.preprocessing.sequence import pad_sequences
 from keras.preprocessing.text import one_hot
 
-
-
-# encoded_docs = [one_hot(d, 50) for d in X]
-# X = pad_sequences(encoded_docs, maxlen=10, padding='post')
-
 vocab = pd.read_csv('vocabs.txt', sep=',', header=None)
 vocab.columns = ['word', 'id']
 
