@@ -1,34 +1,46 @@
+
 from keras.preprocessing.sequence import pad_sequences
 from keras.preprocessing.text import one_hot
+from gensim.models import Word2Vec
+import gensim as gensim
 
-vocab = pd.read_csv('vocabs.txt', sep=',', header=None)
-vocab.columns = ['word', 'id']
+# encoded_docs = [one_hot(d, 50) for d in com]
+# X = pad_sequences(encoded_docs, maxlen=20, padding='post')
 
-# words.head()
+# import logging
+# logging.basicConfig(format='%(asctime)s : %(levelname)s : %(message)s', level=logging.INFO)
+# import gensim.downloader as api
+# corpus = api.load('text8')
+# import inspect                                               #downloads ready vocabulary, comment if alreadt saved
+# print(inspect.getsource(corpus.__class__))
+# print(inspect.getfile(corpus.__class__))
+# model = Word2Vec(corpus)
+# model.save('./readyvocab.model')
 
-sentences = pd.read_csv('train-data.dat', sep=',', header=None)
-sentences.head()
+model = Word2Vec.load('readyvocab.model')       #reads the vocabulary
 
-dict = {}                                       #creates dictionary from vocabs file
-with open('vocabs.txt') as file:
-    for line in file:
-        (key, value) = line.split(', ')
-        dict[key] = int(value)
+processed_sentences = []
+for sentence in com:
+    processed_sentences.append(gensim.utils.simple_preprocess(sentence))        #for every sentence in tweets tokenizes each words
 
-com = []
-for line in df.sentence:
-    sen = ''
-    for word in line.split():
-      for id in vocab.id:
-        if int(word) == int(id):
-          sen = sen + ' ' + str(vocab.word[id]) 
-    # print(sen)
-    com.append(sen)
+vectors = {}
+i = 0
+for v in processed_sentences:
+    vectors[str(i)] = []
+    for k in v:
+        try:
+            vectors[str(i)].append(model.wv[k].mean())      #appends the vector of the word
+        except:
+            vectors[str(i)].append(np.nan)      #if the word doesnt exist the vocabulary insert it as a Nan value
+    i += 1
 
-print(com)
 
-encoded_docs = [one_hot(d, 50) for d in com]
-X = pad_sequences(encoded_docs, maxlen=10, padding='post')
+Χ = pd.DataFrame(dict([(k, pd.Series(v)) for k, v in vectors.items()]))      #puts the vectors in a dataframe
+Χ.fillna(value=0.0, inplace=True)        #replace Nan values with 0
+
+Χ = Χ.transpose()     #transposes the matrices in order to insert into the models
+
+X.head()
 
 from sklearn.model_selection import KFold, train_test_split
 import keras
@@ -71,7 +83,7 @@ for i, (train, test) in enumerate(kfold.split(X)):
     model = Sequential()
     # model.add(Dense(20, input_shape=(20,), activation='softmax', kernel_regularizer=regularizers.l2(0.1)))
     # model.add(tf.keras.layers.Embedding(20, 64, input_length=30))       #input Embedding layer
-    model.add(Dense(20, input_shape=(20,), activation='relu'))          #input
+    model.add(Dense(20, input_shape=(237,), activation='relu'))          #input
     model.add(Dense(hl_n, activation='relu'))                       #hidden
     # model.add(Dense(10, activation='relu'))                         #hidden
     model.add(Dense(20, activation='sigmoid'))                          #output
@@ -81,21 +93,23 @@ for i, (train, test) in enumerate(kfold.split(X)):
         loss='binary_crossentropy',
         # loss='mean_squared_error',
         # metrics=[rmse]
-        metrics=['accuracy']
+        # metrics=['accuracy']
+        metrics=['binary_accuracy']
     )
     
     es = EarlyStopping(             #early stopping
         monitor='val_loss',
         patience=5,
-        verbose=1,
+        verbose=0,
         mode='min'
     )
     
     mc = ModelCheckpoint(
         'best_m.h5',
-        monitor='val_accuracy',
+        # monitor='val_accuracy',
+        monitor='binary_accuracy',
         mode='max',
-        verbose=1,
+        verbose=0,
         save_best_only=True
     )
     
