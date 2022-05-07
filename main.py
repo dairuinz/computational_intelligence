@@ -1,3 +1,4 @@
+import emb
 import prep
 import predi
 import pandas as pd
@@ -23,10 +24,14 @@ def main():
     # print(y.dtypes)
     # print(y[0])
 
-    X = predi.scale(X)
-    # print(X)
+    com = emb.wpre(df)
+    X = emb.wemb(com)
+    emb.wpredi(X, y)
 
-    predi.pred(X, y)
+    # X = predi.scale(X)
+    # # print(X)
+    #
+    # predi.pred(X, y)
 
 if __name__ == '__main__':
     main()

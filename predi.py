@@ -11,6 +11,7 @@ from tensorflow import keras
 from keras.optimizers import *
 from keras.callbacks import EarlyStopping
 from keras.callbacks import ModelCheckpoint
+from matplotlib import pyplot as plt
 
 import os
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
@@ -54,7 +55,6 @@ def pred(X, y):
     for i, (train, test) in enumerate(kfold.split(X)):
         model = Sequential()
         # model.add(Dense(20, input_shape=(8519,), activation='softmax', kernel_regularizer=regularizers.l2(0.1)))
-        # model.add(tf.keras.layers.Embedding(8519, 64, input_length=10))       #input Embedding layer
         model.add(Dense(8519, input_shape=(8519,), activation='relu'))          #input
         model.add(Dense(hl_n, activation='relu'))                       #hidden
         # model.add(Dense(10, activation='relu'))                         #hidden
@@ -94,4 +94,7 @@ def pred(X, y):
         scores = model.evaluate(X_test, y_test, verbose=0)
         rmseList.append(scores[0])
         print("Fold :", i+1, " loss", scores[0])
+
+
+
 
