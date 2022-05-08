@@ -15,3 +15,5 @@
   + Early Stopping
   + L2 Regularization
   
++ Extra
+  + Word2Vec Implementation   
