@@ -17,13 +17,12 @@ from matplotlib import pyplot as plt
 
 
 def wpre(df):
-    vocab = pd.read_csv('Data/vocabs.txt', sep=',', header=None)
-    vocab.columns = ['word', 'id']
+    vocab = pd.read_csv('Data/vocabs.txt', sep=',', header=None)        #reads vocabs data
+    vocab.columns = ['word', 'id']      #names vocab columns
 
-    sentences = pd.read_csv('Data/train-data.dat', sep=',', header=None)
-    sentences.head()
+    sentences = pd.read_csv('Data/train-data.dat', sep=',', header=None)        #reads input data
 
-    com = []
+    com = []                    #converts input data from array of integers to sentences with words
     for line in df.sentence:
         sen = ''
         for word in line.split():
@@ -43,14 +42,11 @@ def wemb(com):
     import gensim as gensim
     import numpy as np
 
-    # encoded_docs = [one_hot(d, 50) for d in com]
-    # X = pad_sequences(encoded_docs, maxlen=20, padding='post')
-
     # import logging
     # logging.basicConfig(format='%(asctime)s : %(levelname)s : %(message)s', level=logging.INFO)
     # import gensim.downloader as api
     # corpus = api.load('text8')
-    # import inspect                                               #downloads ready vocabulary, comment if alreadt saved
+    # import inspect                                               #downloads ready vocabulary, comment if already saved
     # print(inspect.getsource(corpus.__class__))
     # print(inspect.getfile(corpus.__class__))
     # model = Word2Vec(corpus)
@@ -71,20 +67,15 @@ def wemb(com):
             try:
                 vectors[str(i)].append(model.wv[k].mean())  # appends the vector of the word
             except:
-                vectors[str(i)].append(0.0)  # if the word doesnt exist the vocabulary insert it as a Nan value
+                vectors[str(i)].append(np.nan)  # if the word doesnt exist the vocabulary inserts it as a Nan value
         i += 1
 
-
-    # X = pd.DataFrame()
     X = pd.DataFrame(dict([(k, pd.Series(v)) for k, v in vectors.items()]))
-    X.fillna(value=0.0, inplace=True)  # replace Nan values with 0
-    # X = pd.DataFrame(vectors.items())
-    # X.columns = ['drop', 'sentence']
-    # X = X.drop(columns='drop', axis='1')
-    X = X.transpose()
+    X.fillna(value=0.0, inplace=True)  # replace Nan values with float 0
+
+    X = X.transpose()       #transposes matrix to be valid for model input
     print('X shape: ', X.shape, sep='')
-    # X = X.values.tolist()
-    # print(X.head())
+
     return X
 
 def wpredi(X, y):
@@ -92,7 +83,7 @@ def wpredi(X, y):
     rmseList = []
     rrseList = []
 
-    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=42)
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=42)       #splits data into train, test
     # y_test = y_test.transpose()
     # X_test = X_train.transpose()
     # print(y_test)
@@ -101,22 +92,22 @@ def wpredi(X, y):
     answer = input('Select number of hidden layer neurons:\n\t 1. equal to output neurons\n\t '
                    '2. equal to (output neurons + input neurons) / 2\n\t 3. equal to output neurons + input neurons\n')
     if answer == '1':
-        hl_n = 20
+        hl_n = 20               #hidden layer neurons number
     elif answer == '2':
         hl_n = int((20 + 20) / 2)
     elif answer == '3':
         hl_n = 20
 
-    opt = keras.optimizers.Adam(learning_rate=0.01)  # adam
-    # opt = keras.optimizers.SGD(learning_rate=0.001, momentum=0.2)       #sgd
+    # opt = keras.optimizers.Adam(learning_rate=0.01)                    # adam
+    opt = keras.optimizers.SGD(learning_rate=0.001, momentum=0.2)       #sgd
 
     for i, (train, test) in enumerate(kfold.split(X)):
         model = Sequential()
-        # model.add(Dense(20, input_shape=(237,), activation='relu', kernel_regularizer=regularizers.l2(0.1)))
-        model.add(Dense(20, input_shape=(237,), activation='relu'))  # input
-        model.add(Dense(hl_n, activation='relu'))  # hidden
-        # model.add(Dense(10, activation='relu'))                         #hidden
-        model.add(Dense(20, activation='sigmoid'))  # output
+        # model.add(Dense(20, input_shape=(237,), activation='relu', kernel_regularizer=regularizers.l2(0.1)))      #kernel l2 regulirization
+        model.add(Dense(20, input_shape=(237,), activation='relu'))     # input
+        model.add(Dense(hl_n, activation='relu'))                   # hidden
+        # model.add(Dense(10, activation='relu'))                        #2nd hidden
+        model.add(Dense(20, activation='sigmoid'))                  #output
 
         model.compile(
             optimizer=opt,
@@ -127,14 +118,14 @@ def wpredi(X, y):
             metrics=['binary_accuracy']
         )
 
-        es = EarlyStopping(  # early stopping
+        es = EarlyStopping(             #early stopping
             monitor='val_loss',
             patience=5,
             verbose=0,
             mode='min'
         )
 
-        mc = ModelCheckpoint(
+        mc = ModelCheckpoint(        #model checkpoint to save best model each epoch
             'best_m.h5',
             # monitor='val_accuracy',
             monitor='binary_accuracy',
@@ -143,20 +134,19 @@ def wpredi(X, y):
             save_best_only=True
         )
 
-        model.fit(X_train, y_train,
+        history = model.fit(X_train, y_train,       #model fit
                   validation_data=(X_test, y_test),
                   epochs=50,
                   callbacks=[es, mc],
                   verbose=0)
 
-        print('val_loss, val_acc: ', model.evaluate(X_test, y_test), sep='')
+        print('val_loss, val_acc: ', model.evaluate(X_test, y_test), sep='')         #model evaluation
 
         scores = model.evaluate(X_test, y_test, verbose=0)
         rmseList.append(scores[0])
         print("Fold :", i + 1, " loss", scores[0])
 
-        history = model.fit(X_train, y_train, validation_split=0.1, epochs=50, batch_size=4)
-        plt.plot(history.history['binary_accuracy'])
+        plt.plot(history.history['binary_accuracy'])                    #plots accuracy, val_accuracy/epoch graph
         plt.plot(history.history['val_binary_accuracy'])
         plt.title('model accuracy')
         plt.ylabel('accuracy')

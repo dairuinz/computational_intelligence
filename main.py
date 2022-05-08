@@ -8,30 +8,29 @@ pd.set_option('display.max_columns', None)
 
 
 def main():
-    df = pd.read_csv('Data/train-data.dat', sep=',', header=None)
-    df.columns = ['sentence']
-    df['sentence'] = df['sentence'].str.replace('<.*?>', '', regex=True)  # deletes <int>
+    df = pd.read_csv('Data/train-data.dat', sep=',', header=None)       #reads input data
+    df.columns = ['sentence']           #names column of data
+    df['sentence'] = df['sentence'].str.replace('<.*?>', '', regex=True)    #deletes <int>
     # print(df.head())
     df = df[0:100]
-    X = df
+    X = df      #input data
 
-    X = prep.bow(X)
-    print('X shape: ', X.shape, sep='')
-    # print(X.head(5))
+    y = prep.out()      #output data preprocessing
+    # print('y shape: ', y.shape, sep='')
 
-    y = prep.out()
-    print('y shape: ', y.shape, sep='')
-    # print(y.dtypes)
-    # print(y[0])
+    answer = input('Select method:\n\t 1. Bag of Words\n\t '
+                   '2. Word Embeddings\n')
 
-    com = emb.wpre(df)
-    X = emb.wemb(com)
-    emb.wpredi(X, y)
+    if answer == '1':
+        X = prep.bow(X)      # input bag of words data preprocessing
+        # print('X shape: ', X.shape, sep='')
+        X = predi.scale(X)      #scaling of input data
+        predi.pred(X, y)        #model
+    elif answer == '2':
+        com = emb.wpre(X)       #word embeddings preparation
+        X = emb.wemb(com)       #word2vec implementation
+        emb.wpredi(X, y)        #model
 
-    # X = predi.scale(X)
-    # # print(X)
-    #
-    # predi.pred(X, y)
 
 if __name__ == '__main__':
     main()
