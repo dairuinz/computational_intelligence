@@ -42,15 +42,15 @@ def wemb(com):
     import gensim as gensim
     import numpy as np
 
-    # import logging
-    # logging.basicConfig(format='%(asctime)s : %(levelname)s : %(message)s', level=logging.INFO)
-    # import gensim.downloader as api
-    # corpus = api.load('text8')
-    # import inspect                                               #downloads ready vocabulary, comment if already saved
-    # print(inspect.getsource(corpus.__class__))
-    # print(inspect.getfile(corpus.__class__))
-    # model = Word2Vec(corpus)
-    # model.save('./readyvocab.model')
+    import logging
+    logging.basicConfig(format='%(asctime)s : %(levelname)s : %(message)s', level=logging.INFO)
+    import gensim.downloader as api
+    corpus = api.load('text8')
+    import inspect                                               #downloads ready vocabulary, comment if already saved
+    print(inspect.getsource(corpus.__class__))
+    print(inspect.getfile(corpus.__class__))
+    model = Word2Vec(corpus)
+    model.save('./readyvocab.model')
 
     model = Word2Vec.load('readyvocab.model')  # reads the vocabulary
 
